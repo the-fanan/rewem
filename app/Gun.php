@@ -19,8 +19,8 @@ class Gun extends Model
     /**
      * For Relationships
      */
-    public function country()
+    public function group()
     {
-        return $this->belongsTo(Country::class);
+        return $this->belongsTo(Group::class);
     }
 }

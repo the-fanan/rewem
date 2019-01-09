@@ -4,9 +4,8 @@ namespace rewem;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Country extends Model
+class Group extends Model
 {
-    //
     /**
      * The attributes that are not mass assignable.
      *
@@ -19,13 +18,18 @@ class Country extends Model
     /**
      * For Relationships
      */
-    public function group()
+    public function users()
     {
-        return $this->hasOne(Group::class);
+        return $this->hasMany(User::class);
     }
 
-    public function states()
+    public function guns()
     {
-        return $this->hasMany(State::class);
+        return $this->hasMany(Gun::class);
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
     }
 }

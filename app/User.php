@@ -5,6 +5,9 @@ namespace rewem;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Str;
+use Spatie\Permission\Traits\HasRoles;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -31,9 +34,9 @@ class User extends Authenticatable
     /**
      * For Relationships
      */
-    public function country()
+    
+    public function group()
     {
-        return $this->belongsTo(Country::class);
+        return $this->belongsTo(Group::class);
     }
-   
 }

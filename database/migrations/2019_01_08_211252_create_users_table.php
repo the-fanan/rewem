@@ -18,7 +18,8 @@ class CreateUsersTable extends Migration
             $table->string('fullname');
             $table->string('email');
             $table->string('password');
-            $table->integer('country_id')->unsigned()->nullable();
+            $table->integer('group_id')->unsigned()->nullable();
+            $table->string('profile_image')->nullable();
             $table->enum('status', ['active','deleted', 'suspended']);
             $table->timestamps();
         });
