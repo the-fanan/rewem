@@ -11,8 +11,11 @@
 |
 */
 
-Route::get('/', 'Auth\LoginController@showLoginForm');
-Route::post('/login', 'Auth\LoginController@login')->name('login');
+Route::get('/', 'Auth\LoginController@showLoginForm')->name('home');
+Route::get('/login', function() {
+    return redirect('/');
+})->name('login');
+Route::post('/login', 'Auth\LoginController@login')->name('login.post');
 Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
 //Auth::routes();
@@ -20,8 +23,8 @@ Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
     Route::get('mailer', 'TestController@mailer');
 });*/
 
-Route::get('/home', 'HomeController@index')->name('home');
-
 Route::group(['prefix' => 'user'], function(){
-    Route::get('dashboard', 'UserController@showDashboard');
+    Route::get('dashboard', 'UserController@showDashboard')->name('dashboard');
+    Route::get('manage-group', 'UserController@showManageGroup')->name('group.manage.show');
+    Route::get('manage-group-admin', 'UserController@showManageGroupAdmin')->name('group-admin.manage.show');
 });
