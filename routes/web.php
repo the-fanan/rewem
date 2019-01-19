@@ -11,14 +11,17 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'Auth\LoginController@showLoginForm');
+Route::post('/login', 'Auth\LoginController@login')->name('login');
+Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
-Auth::routes();
-
-Route::group(['prefix' => 'test'], function(){
+//Auth::routes();
+/*Route::group(['prefix' => 'test'], function(){
     Route::get('mailer', 'TestController@mailer');
-});
+});*/
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(['prefix' => 'user'], function(){
+    Route::get('dashboard', 'UserController@showDashboard');
+});
