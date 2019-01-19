@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->integer('group_id')->unsigned()->nullable();
             $table->string('profile_image')->nullable();
             $table->enum('status', ['active','deleted', 'suspended']);
+            $table->rememberToken();
             $table->timestamps();
         });
     }
