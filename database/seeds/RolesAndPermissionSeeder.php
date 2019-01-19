@@ -14,6 +14,7 @@ class RolesAndPermissionSeeder extends Seeder
     public function run()
     {
         //Create Permissions
+        Permission::create(['name' => 'create-group','guard_name' => 'web']);
         Permission::create(['name' => 'create-group-admin','guard_name' => 'web']);
         Permission::create(['name' => 'create-gun-modulator','guard_name' => 'web']);
         Permission::create(['name' => 'create-gun','guard_name' => 'web']);
@@ -29,8 +30,15 @@ class RolesAndPermissionSeeder extends Seeder
         $GunUser = Role::create(['name' => 'gun-user','guard_name' => 'web']);
         
         //assign permission to roles
+        //super admin
         $SuperAdmin->givePermissionTo('create-group-admin');
+        $SuperAdmin->givePermissionTo('create-group');
+        //group admin
         $GroupAdmin->givePermissionTo('create-gun-modulator');
+        $GroupAdmin->givePermissionTo('create-gun');
+        $GroupAdmin->givePermissionTo('assign-gun');
+        $GroupAdmin->givePermissionTo('control-gun');
+        //others
         $GunCreator->givePermissionTo('create-gun');
         $GunAssigner->givePermissionTo('assign-gun');
         $GunController->givePermissionTo('control-gun');
