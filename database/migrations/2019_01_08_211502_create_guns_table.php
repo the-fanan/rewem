@@ -15,13 +15,13 @@ class CreateGunsTable extends Migration
     {
         Schema::create('guns', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('group_id')->unsigned();
+            $table->integer('group_id')->unsigned();//owner
             $table->float('lat')->unsigned()->nullable();
             $table->float('long')->unsigned()->nullable();
-            $table->integer('emergency_allow')->unsigned()->default(1);
-            $table->integer('emergency_duration')->unsigned()->default(12);
+            $table->integer('emergency_allow')->unsigned()->default(0);
+            $table->integer('emergency_duration')->unsigned()->default(0);
             $table->string('emergency_duration_unit')->default('hour');
-            $table->string('rfid', 2500)->nullable();
+            $table->string('rfid', 2500)->nullable();//authorisation
             $table->timestamps();
         });
     }

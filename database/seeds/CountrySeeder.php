@@ -17,5 +17,17 @@ class CountrySeeder extends Seeder
             'iso_code' => 'NG',
             'continent' => 'Africa',
         ]);
+
+        Country::create([
+            'name' => 'United States',
+            'iso_code' => 'USA',
+            'continent' => 'North America',
+        ]);
+
+        Country::create([
+            'name' => 'London',
+            'iso_code' => 'LN',
+            'continent' => 'Europe',
+        ]);
     }
 }

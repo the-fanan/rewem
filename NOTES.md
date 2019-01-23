@@ -1,1 +1,1 @@
-CHange of password is to be handled by group-admin. App should not automatically handle this for security reasons.
+Change of password is to be handled by group-admin. App should not automatically handle this for security reasons.
