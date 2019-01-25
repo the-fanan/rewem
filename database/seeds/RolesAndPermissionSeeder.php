@@ -31,10 +31,11 @@ class RolesAndPermissionSeeder extends Seeder
         
         //assign permission to roles
         //super admin
-        $SuperAdmin->givePermissionTo('create-group-admin');
         $SuperAdmin->givePermissionTo('create-group');
+        $SuperAdmin->givePermissionTo('create-group-admin');
         //group admin
         $GroupAdmin->givePermissionTo('create-gun-modulator');
+        $GroupAdmin->givePermissionTo('create-group-admin');
         $GroupAdmin->givePermissionTo('create-gun');
         $GroupAdmin->givePermissionTo('assign-gun');
         $GroupAdmin->givePermissionTo('control-gun');

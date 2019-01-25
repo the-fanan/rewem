@@ -5,6 +5,7 @@ namespace rewem\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
+use rewem\Country;
 use Auth;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,7 +20,8 @@ class AppServiceProvider extends ServiceProvider
         //
         Schema::defaultStringLength(250);
         View::composer('*',function($view){
-            $view->with('auth', Auth::user());
+            $view->with('auth', Auth::user())
+            ->with('countries', Country::all());
         });
     }
 

@@ -17,6 +17,7 @@
 
     <!-- Main content -->
     <section class="content">
+    @include('includes.alert')
     <!-- Info boxes -->
     <div class="row">
         @foreach($auth->dashboardTabs() as $tab)

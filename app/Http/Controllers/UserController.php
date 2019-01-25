@@ -9,7 +9,7 @@ use Auth;
 
 class UserController extends Controller
 {
-     /**
+    /**
      * 
      */
     
@@ -21,12 +21,6 @@ class UserController extends Controller
             $this->user = Auth::user();
             return $next($request);
         });
-        /*
-        $this->middleware('role:Agent')->except('becomeLpm');
-        $this->middleware('permission:admin-management');
-        $this->middleware('permission:add-admin',['only' => 'store']);
-        $this->middleware('permission:update-admin',['only' => ['edit','update','changePassword']]);
-        $this->middleware('permission:delete-admin',['only' => 'destroy']);*/
     }
 
     public function showDashboard()
