@@ -39,5 +39,7 @@ Route::group(['prefix' => 'group'], function(){
     Route::get('manage-group', 'GroupController@showManageGroup')->name('group.manage.show');
     Route::post('create-group', 'GroupController@createGroup')->name('group.create');
 
-    Route::get('manage-group-admin', 'GroupController@showManageGroupAdmin')->name('group-admin.manage.show');
+    Route::get('manage-group-member', 'GroupController@showManageGroupMember')->name('group-member.manage.show');
+    Route::post('create-group-member', 'GroupController@createGroupMember')->name('group-member.create');
+    Route::post('search-group-member', 'GroupController@searchGroupMember')->name('group-member.search');
 });

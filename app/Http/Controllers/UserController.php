@@ -12,7 +12,6 @@ class UserController extends Controller
     /**
      * 
      */
-    
     private $user;
     public function __construct()
     {

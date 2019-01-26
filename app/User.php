@@ -72,8 +72,8 @@ class User extends Authenticatable
             $links[] = $link;
          }
 
-         if ($this->hasPermissionTo('manage-group-admin')) {
-            $link = ["title" => "Manage Group Admin", "href" => "group-admin.manage.show", "icon" => "fa-user"];
+         if ($this->hasPermissionTo('manage-group-members')) {
+            $link = ["title" => "Manage Group Members", "href" => "group-member.manage.show", "icon" => "fa-user"];
             $links[] = $link;
          }
 
