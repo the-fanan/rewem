@@ -17,6 +17,7 @@ class CreateGroupsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('type');//country or company
+            $table->string('logo')->nullable();
             $table->integer('country_id')->unsigned()->nullable();
             $table->timestamps();
         });

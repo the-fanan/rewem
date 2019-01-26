@@ -72,7 +72,7 @@ class User extends Authenticatable
             $links[] = $link;
          }
 
-         if ($this->hasPermissionTo('create-group-admin')) {
+         if ($this->hasPermissionTo('manage-group-admin')) {
             $link = ["title" => "Manage Group Admin", "href" => "group-admin.manage.show", "icon" => "fa-user"];
             $links[] = $link;
          }
@@ -87,6 +87,18 @@ class User extends Authenticatable
          if ($this->hasRole('super-admin')) {
             $tabs[] = ["title" => "groups", "icon" => "fa-group", "bg-color" => "bg-aqua", "quantity" => Group::all()->count()];
             $tabs[] = ["title" => "guns", "icon" => "fa-th", "bg-color" => "bg-aqua", "quantity" => Gun::all()->count()];
+         }
+
+         if ($this->hasRole('group-admin')) {
+    
+            $tabs[] = ["title" => "gun controllers", "icon" => "fa-group", "bg-color" => "bg-aqua", "quantity" => $this->group->users()->with('roles')->whereHas("roles", function($q){ $q->where("name", "gun-controller"); })->count()];
+
+            $tabs[] = ["title" => "gun creators", "icon" => "fa-group", "bg-color" => "bg-aqua", "quantity" => $this->group->users()->with('roles')->whereHas("roles", function($q){ $q->where("name", "gun-creator"); })->count()];
+
+            $tabs[] = ["title" => "group admins", "icon" => "fa-group", "bg-color" => "bg-aqua", "quantity" => $this->group->users()->with('roles')->whereHas("roles", function($q){ $q->where("name", "group-admin"); })->count()];
+
+            $tabs[] = ["title" => "gun users", "icon" => "fa-group", "bg-color" => "bg-aqua", "quantity" => $this->group->users()->with('roles')->whereHas("roles", function($q){ $q->where("name", "gun-user"); })->count()];
+
          }
         
          return $tabs;

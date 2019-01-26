@@ -41,16 +41,6 @@ class UsersTableSeeder extends Seeder
 
         $user3->assignRole('gun-creator');
 
-        $user4 = User::create([
-            'fullname' => 'John Doe',
-            'email' => 'john123@yahoo.com',
-            'password' => bcrypt('john123'),
-            'group_id' => 1,
-            'status' => 'active'
-        ]);
-
-        $user4->assignRole('gun-assigner');
-
         $user5 = User::create([
             'fullname' => 'Janet Doe',
             'email' => 'janet123@yahoo.com',
@@ -61,7 +51,15 @@ class UsersTableSeeder extends Seeder
 
         $user5->assignRole('gun-controller');
 
+        $user6 = User::create([
+            'fullname' => 'James Doe',
+            'email' => 'james123@yahoo.com',
+            'password' => bcrypt('james123'),
+            'group_id' => 1,
+            'status' => 'active'
+        ]);
 
+        $user6->assignRole('gun-user');
 
     }
 }
