@@ -23,9 +23,9 @@ class GroupController extends Controller
             return $next($request);
         });
         $this->middleware('role:super-admin', ['only' => ['showManageGroup']]);//except
-        $this->middleware('role:group-admin', ['only' => ['showManageGroupAdmin']]);
+        $this->middleware('role:group-admin', ['only' => ['showManageGroupMember']]);
         $this->middleware('permission:create-group', ['only' => ['createGroup']]);
-        $this->middleware('permission:create-gun-modulator', ['only' => ['createGunModulator']]);
+        $this->middleware('permission:manage-group-members', ['only' => ['createGroupMember']]);
     }
 
     public function showManageGroup() 
@@ -43,7 +43,7 @@ class GroupController extends Controller
      * Creates a group
      *
      * @param Request $request
-     * @return void
+     * @return JSON
      */
     public function createGroup(Request $request)
     {
