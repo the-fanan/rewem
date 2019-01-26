@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Auth;
 use rewem\Group;
 use rewem\User;
@@ -22,7 +23,9 @@ class GroupController extends Controller
             return $next($request);
         });
         $this->middleware('role:super-admin', ['only' => ['showManageGroup']]);//except
+        $this->middleware('role:group-admin', ['only' => ['showManageGroupAdmin']]);
         $this->middleware('permission:create-group', ['only' => ['createGroup']]);
+        $this->middleware('permission:create-gun-modulator', ['only' => ['createGunModulator']]);
     }
 
     public function showManageGroup() 
@@ -30,32 +33,35 @@ class GroupController extends Controller
         return view('group.manage-group');
     }
 
-    public function showManageGroupAdmin() 
+    public function showManageGroupMember() 
     {
-        return view('group.manage-group-admin');
+        $roles = Role::where('name','!=','super-admin')->get();
+        return view('group.manage-group-member',compact('roles'));
     }
 
+    /**
+     * Creates a group
+     *
+     * @param Request $request
+     * @return void
+     */
     public function createGroup(Request $request)
     {
+        $messages = [
+            'group_admins.*.value.email' => 'Admin email is not valid.',
+            'group_admins.*.value.unique' => 'Admin email is already taken.',
+        ];
         $validator = Validator::make($request->all(), [
             'group_name' => 'required|string|max:255|unique:groups,name',
             'group_type' => 'required|string|max:255',
             'group_country' => 'required|numeric',
             'group_admins' => 'required|array',
             'group_admins.*.value' => 'email|unique:users,email'
-        ]);
+        ], $messages);
         if ($validator->fails()) {
-            //write code to parse valdator->errors() into human readable form
-           /* $message = "";
-            foreach((array) $validator->errors() as $error => $value) {
-                //$error = field name $value = field value 
-                if (!is_array($value)) {
-                    $message += $message . $value . " ";
-                }
-            }*/
             return response()->json([
                 'type' => 'error',
-                'message' => $validator->errors()
+                'message' => implode(" ",$validator->messages()->all())
             ],200);
         }
         //if validator did not fail
@@ -64,7 +70,7 @@ class GroupController extends Controller
             'type' => $request->group_type,
             'country_id' => $request->group_country
         ]);
-        //Parse group admins
+        //create group admins
         DB::beginTransaction();
         foreach ($request->group_admins as $index => $value) {
             $admin = User::create([
@@ -81,6 +87,44 @@ class GroupController extends Controller
         return response()->json([
             'type' => 'success',
             'message' => 'Group Created!'
+        ],200);
+    }
+    
+    /**
+     * Creates Group Members
+     *
+     * @param Request $request
+     * @return JSON
+     */
+    public function createGroupMember(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'member_name' => 'required|string|max:255',
+            'member_email' => 'required|email|unique:users,email',
+            'member_role' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'type' => 'error',
+                'message' => implode(" ",$validator->messages()->all())
+            ],200);
+        }
+
+        //create member 
+        $member = User::create([
+            'fullname' => $request->member_name,
+                'email' => $request->member_email,
+                'password' => bcrypt('meruem57'),//inproduction this should be a random generated string 
+                'status' => 'active',
+                'group_id' => $this->user->group->id
+        ]);
+        
+        $member->assignRole($request->member_role);
+        //in production send email to user to accept role and see password
+
+        return response()->json([
+            'type' => 'success',
+            'message' => 'Member Created!'
         ],200);
     }
 }
