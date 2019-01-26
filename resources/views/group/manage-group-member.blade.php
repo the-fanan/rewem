@@ -19,9 +19,9 @@
 	<section class="content" id="MainGroupContent">
 		@include('includes.alert-frontend')
 		<div class="row">
-			<!-- left column -->
+			<!-- column -->
 			<div class="col-md-12">
-				<!-- general form elements -->
+				<!-- add new members -->
 				<div class="box box-primary">
 					<div class="box-header with-border">
 						<h3 class="box-title">Add New Member</h3>
@@ -63,7 +63,51 @@
 				</div>
 				<!-- /.box -->
 			</div>
+		</div>
 			<!-- /.row -->
+
+			<div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title">Members</h3>
+
+                <div class="box-tools">
+                  <div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-10 pull-right" >
+                    <input type="text" v-model="memberSearch" name="table_search" class="form-control pull-right" placeholder="Search">
+
+                    <div class="input-group-btn">
+                      <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body table-responsive no-padding">
+                <table class="table table-hover">
+                  <tr>
+										<th>S/N</th>
+										<th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Remove</th>
+									</tr>
+									
+                  <tr v-for="(member, index) in groupMembers">
+                    <td>${ (index + 1) }</td>
+                    <td>${ member.fullname }</td>
+                    <td>${ member.email }</td>
+                    <td><span class="label label-primary">${ member.status }</span></td>
+                    <td><button class="btn btn-primary bg-red" v-on:click="deleteMember($event, member.id)">Remove</button></td>
+									</tr>
+							
+                </table>
+              </div>
+              <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+          </div>
+        </div>
 	</section>
 	<!-- /.content -->
 </div>
@@ -79,7 +123,14 @@
 			memberName: null,
 			memberEmail: null,
 			memberRole: null,
+			memberSearch: null,
+			groupMembers: JSON.parse('{!! addslashes(json_encode($auth->group->users->all())) !!}'),
 			alert: { success: null, error: null, info: null, warning: null }
+		},
+		watch: {
+			memberSearch: function() {
+				this.searchMembers()
+			}
 		},
 		methods: {
 			createGroupMember: function (e) {
@@ -109,11 +160,18 @@
 						console.log(error);
 					});
 			},
-			addAdmin: function (e) {
-				e.preventDefault();
-
-			},
-			deleteAdmin: function (e, index) {
+			searchMembers: _.debounce(function() {
+						//send axios post quesry
+						axios.post("{{ route('group-member.search') }}",{
+                            search: this.memberSearch
+                        }).then(response => {
+                            this.groupMembers = response.data;
+                        }).catch(function(error){
+                            console.log(error)
+                        });
+							},
+			 500),
+			deleteMember: function (e, index) {
 				e.preventDefault();
 
 			},

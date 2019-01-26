@@ -127,4 +127,14 @@ class GroupController extends Controller
             'message' => 'Member Created!'
         ],200);
     }
+
+    public function searchGroupMember(Request $request)
+    {
+        if ($request->search == "") {
+            $members = $this->user->group->users;
+            return response()->json($members,200);
+        }
+        $members = $this->user->group->users()->where('fullname', 'like', '%' . $request->search . '%')->orWhere('email', 'like', '%' . $request->search . '%')->get();
+        return response()->json($members,200);
+    }
 }
