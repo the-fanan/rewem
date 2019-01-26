@@ -16,12 +16,15 @@ class PermissionManagement
     public function handle($request, Closure $next, $permission)
     {
         if (!$request->user()->hasPermissionTo($permission)) {
+            $value = ucfirst(str_replace('-',' ',$permission));
             if ($request->ajax()) {
                 return response()->json([
-                    'message' => 'Permission Denied'
-                ],422);
+                    'type' => 'error',
+                    'message' => 'Unauthorized action, you don\'t have the permission to ' . $value
+                ],200);
             }
-            $value = ucfirst(str_replace('-',' ',$permission));
+            
+
             return back()->with('error','Unauthorized action, you don\'t have the permission to ' . $value);
         }
         return $next($request);

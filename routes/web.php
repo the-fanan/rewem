@@ -23,8 +23,21 @@ Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
     Route::get('mailer', 'TestController@mailer');
 });*/
 
+/**
+ * ============ User Related routes =================
+ */
 Route::group(['prefix' => 'user'], function(){
+    
     Route::get('dashboard', 'UserController@showDashboard')->name('dashboard');
-    Route::get('manage-group', 'UserController@showManageGroup')->name('group.manage.show');
-    Route::get('manage-group-admin', 'UserController@showManageGroupAdmin')->name('group-admin.manage.show');
+
+    
+});
+/**
+ * ============ Group Related Routes ================
+ */
+Route::group(['prefix' => 'group'], function(){
+    Route::get('manage-group', 'GroupController@showManageGroup')->name('group.manage.show');
+    Route::post('create-group', 'GroupController@createGroup')->name('group.create');
+
+    Route::get('manage-group-admin', 'GroupController@showManageGroupAdmin')->name('group-admin.manage.show');
 });

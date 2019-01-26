@@ -14,7 +14,14 @@ class Group extends Model
     protected $protected = [
         'id'
     ];
-
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'type', 'country_id',
+    ];
     /**
      * For Relationships
      */
