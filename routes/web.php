@@ -36,10 +36,14 @@ Route::group(['prefix' => 'user'], function(){
  * ============ Group Related Routes ================
  */
 Route::group(['prefix' => 'group'], function(){
+    //create group routes
     Route::get('manage-group', 'GroupController@showManageGroup')->name('group.manage.show');
     Route::post('create-group', 'GroupController@createGroup')->name('group.create');
-
+    //manage group route
     Route::get('manage-group-member', 'GroupController@showManageGroupMember')->name('group-member.manage.show');
     Route::post('create-group-member', 'GroupController@createGroupMember')->name('group-member.create');
     Route::post('search-group-member', 'GroupController@searchGroupMember')->name('group-member.search');
+    //create gun routes
+    Route::get('create-gun', 'GunController@showCreateGun')->name('gun.create.show');
+    Route::post('create-gun', 'GunController@createGun')->name('gun.create');
 });

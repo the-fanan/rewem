@@ -77,6 +77,11 @@ class User extends Authenticatable
             $links[] = $link;
          }
 
+         if ($this->hasPermissionTo('create-gun')) {
+            $link = ["title" => "Create Gun", "href" => "gun.create.show", "icon" => "fa-play"];
+            $links[] = $link;
+         }
+
          return $links;
      }
 

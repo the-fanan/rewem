@@ -11,7 +11,7 @@ class Group extends Model
      *
      * @var array
      */
-    protected $protected = [
+    protected $guarded = [
         'id'
     ];
     /**

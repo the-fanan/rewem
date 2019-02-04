@@ -16,6 +16,9 @@ class CreateGunsTable extends Migration
         Schema::create('guns', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('group_id')->unsigned();//owner
+            $table->string('serial_code');
+            $table->string('model')->nullable();
+            $table->string('type')->nullable();
             $table->float('lat')->unsigned()->nullable();
             $table->float('long')->unsigned()->nullable();
             $table->integer('emergency_allow')->unsigned()->default(0);

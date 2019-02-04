@@ -12,7 +12,7 @@ class Gun extends Model
      *
      * @var array
      */
-    protected $protected = [
+    protected $guarded = [
         'id'
     ];
 
