@@ -22,12 +22,19 @@ class GunController extends Controller
             return $next($request);
         });
         $this->middleware('role:gun-creator', ['only' => ['showCreateGun']]);//except
+        $this->middleware('role:gun-controller', ['only' => ['showControlGun']]);//except
         $this->middleware('permission:create-gun', ['only' => ['createGun']]);
+        $this->middleware('permission:control-gun', ['only' => ['controlGun']]);
     }
 
     public function showCreateGun()
     {
         return view('gun.create-gun');
+    }
+
+    public function showControlGun()
+    {
+        return view('gun.control-gun');
     }
 
     public function createGun(Request $request)
@@ -55,5 +62,20 @@ class GunController extends Controller
             'type' => 'success',
             'message' => 'Gun created!'
         ],200);
+    }
+
+    public function updateGun()
+    {
+
+    }
+
+    public function searchGuns(Request $request)
+    {
+        if ($request->search == "") {
+            $members = $this->user->group->guns;
+            return response()->json($members,200);
+        }
+        $members = $this->user->group->guns()->where('serial_code', 'like', '%' . $request->search . '%')->orWhere('model', 'like', '%' . $request->search . '%')->orWhere('type', 'like', '%' . $request->search . '%')->get();
+        return response()->json($members,200);
     }
 }

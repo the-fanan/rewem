@@ -46,4 +46,8 @@ Route::group(['prefix' => 'group'], function(){
     //create gun routes
     Route::get('create-gun', 'GunController@showCreateGun')->name('gun.create.show');
     Route::post('create-gun', 'GunController@createGun')->name('gun.create');
+    //control gun routes
+    Route::get('control-gun', 'GunController@showControlGun')->name('gun.control.show');
+    Route::post('search-gun', 'GunController@searchGuns')->name('gun.search');
+    Route::post('update-gun', 'GunController@updateGun')->name('gun.update');
 });
