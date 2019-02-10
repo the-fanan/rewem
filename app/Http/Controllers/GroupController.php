@@ -83,6 +83,15 @@ class GroupController extends Controller
             $admin->assignRole('group-admin');
             //in production send mail to adnmin containing password
         }
+
+        //add audit trail
+        $this->user->auditTrails()->create([
+            "group_id" => $this->user->group_id,
+            "action" => "Created",
+            "object" => $group->id,
+            "object_type" => get_class($group),
+            "details" => json_encode($group)
+        ]);
         DB::commit();
         return response()->json([
             'type' => 'success',
@@ -121,6 +130,15 @@ class GroupController extends Controller
         
         $member->assignRole($request->member_role);
         //in production send email to user to accept role and see password
+        
+        //add audit trail
+        $this->user->auditTrails()->create([
+            "group_id" => $this->user->group_id,
+            "action" => "Created",
+            "object" => $member->id,
+            "object_type" => get_class($member),
+            "details" => json_encode($member)
+        ]);
 
         return response()->json([
             'type' => 'success',

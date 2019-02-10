@@ -3,6 +3,7 @@
 namespace rewem;
 
 use Illuminate\Database\Eloquent\Model;
+use rewem\User;
 
 class AuditTrail extends Model
 {
@@ -12,11 +13,16 @@ class AuditTrail extends Model
      *
      * @var array
      */
-    protected $protected = [
+    protected $guarded = [
         'id'
     ];
 
     /**
      * For Relationships
      */
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

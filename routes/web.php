@@ -17,7 +17,7 @@ Route::get('/login', function() {
 })->name('login');
 Route::post('/login', 'Auth\LoginController@login')->name('login.post');
 Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
-
+Route::get('/gun/{id}', 'GunController@getGunParameters');
 //Auth::routes();
 /*Route::group(['prefix' => 'test'], function(){
     Route::get('mailer', 'TestController@mailer');

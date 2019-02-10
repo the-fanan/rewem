@@ -15,8 +15,12 @@ class CreateAuditTrailsTable extends Migration
     {
         Schema::create('audit_trails', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('group_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->string('action');
+            $table->integer('object')->unsigned();
+            $table->string('object_type');
+            $table->string('details', 2500);
             $table->timestamps();
         });
     }

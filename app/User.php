@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 use rewem\Gun;
 use rewem\Group;
+use rewem\AuditTrail;
 use Carbon\Carbon;
 
 class User extends Authenticatable
@@ -54,6 +55,10 @@ class User extends Authenticatable
         return $this->belongsTo(Group::class);
     }
 
+    public function auditTrails()
+    {
+        return $this->hasMany(AuditTrail::class);
+    }
     /**
      ============= For frontend functions ========
      */

@@ -21,8 +21,8 @@ class GunController extends Controller
             $this->user = Auth::user();
             return $next($request);
         });
-        $this->middleware('role:gun-creator', ['only' => ['showCreateGun']]);//except
         $this->middleware('role:gun-controller', ['only' => ['showControlGun']]);//except
+        $this->middleware('role:gun-creator', ['only' => ['showCreateGun']]);//except
         $this->middleware('permission:create-gun', ['only' => ['createGun']]);
         $this->middleware('permission:control-gun', ['only' => ['controlGun']]);
     }
@@ -52,11 +52,20 @@ class GunController extends Controller
             ],200);
         }
         //if validation is successfull
-        $this->user->group->guns()->create([
+        $gun = $this->user->group->guns()->create([
             "serial_code" => $request->gun_serial_code,
             "model" => $request->gun_model,
             "type" => $request->gun_type,
         ]);
+        //add audit trail
+        $this->user->auditTrails()->create([
+            "group_id" => $this->user->group_id,
+            "action" => "Created",
+            "object" => $gun->id,
+            "object_type" => get_class($gun),
+            "details" => json_encode($gun)
+        ]);
+        
 
         return response()->json([
             'type' => 'success',
@@ -80,9 +89,16 @@ class GunController extends Controller
         }
 
         //if validation does not fial update gun
-
-        Gun::where('id', $request->gun_details['id'])->update($request->gun_details);
-        
+        $gun = Gun::find($request->gun_details['id']);
+        $gun->update($request->gun_details);
+        //add audit trail
+        $this->user->auditTrails()->create([
+            "group_id" => $this->user->group_id,
+            "action" => "Edited",
+            "object" => $gun->id,
+            "object_type" => get_class($gun),
+            "details" => json_encode($gun)
+        ]);
         return response()->json([
             'type' => 'success',
             'message' => "Gun " . $request->gun_details['serial_code'] . " updated"
@@ -97,5 +113,11 @@ class GunController extends Controller
         }
         $members = $this->user->group->guns()->where('serial_code', 'like', '%' . $request->search . '%')->orWhere('model', 'like', '%' . $request->search . '%')->orWhere('type', 'like', '%' . $request->search . '%')->get();
         return response()->json($members,200);
+    }
+
+    public function getGunParameters(Request $request)
+    {
+        $gun = Gun::find($request->id);
+        return $gun;
     }
 }
