@@ -21,10 +21,10 @@ class GunController extends Controller
             $this->user = Auth::user();
             return $next($request);
         });
-        $this->middleware('role:gun-controller', ['only' => ['showControlGun', 'deleteGun']]);//except
-        $this->middleware('role:gun-creator', ['only' => ['showCreateGun']]);//except
+        $this->middleware('role:gun-controller,group-admin', ['only' => ['showControlGun']]);//except
+        $this->middleware('role:gun-creator,group-admin', ['only' => ['showCreateGun']]);//except
         $this->middleware('permission:create-gun', ['only' => ['createGun']]);
-        $this->middleware('permission:control-gun', ['only' => ['controlGun']]);
+        $this->middleware('permission:control-gun', ['only' => ['controlGun', 'deleteGun']]);
     }
 
     public function showCreateGun()
