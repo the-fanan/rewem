@@ -64,9 +64,29 @@ class GunController extends Controller
         ],200);
     }
 
-    public function updateGun()
+    public function updateGun(Request $request)
     {
+        $validator = Validator::make($request->gun_details, [
+            'serial_code' => 'required|string|max:255',
+            'model' => 'sometimes|nullable|string|max:255',
+            'type' => 'sometimes|nullable|string|max:255'
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'type' => 'error',
+                'message' => implode(" ",$validator->messages()->all())
+            ],200);
+        }
+
+        //if validation does not fial update gun
+
+        Gun::where('id', $request->gun_details['id'])->update($request->gun_details);
+        
+        return response()->json([
+            'type' => 'success',
+            'message' => "Gun " . $request->gun_details['serial_code'] . " updated"
+        ],200);
     }
 
     public function searchGuns(Request $request)

@@ -54,7 +54,7 @@
 							<td>${ gun.serial_code }</td>
 							<td>${ gun.model }</td>
 							<td>${ gun.type }</td>
-							<td><button class="btn btn-primary bg-blue" v-on:click="editGun($event, gun)">Edit</button></td>
+							<td><button class="btn btn-primary bg-blue" v-on:click="editGun($event, gun, index)">Edit</button></td>
 						</tr>
 				
 					</table>
@@ -74,10 +74,74 @@
 						<h4 class="modal-title">Update Gun Parameters</h4>
 					</div>
 					<div class="modal-body">
-						
+						<form role="form">
+							<div class="form-group col-xs-6">
+								<label>Serial Code</label>
+								<input type="form-control" v-model="currentGun.serial_code"  />
+							</div>
+
+							<div class="form-group col-xs-6">
+								<label>Model</label>
+								<input type="form-control" v-model="currentGun.model"  />
+							</div>
+
+							<div class="form-group col-xs-6">
+								<label>Type</label>
+								<input type="form-control" v-model="currentGun.type"  />
+							</div>
+
+							<div class="form-group col-xs-6">
+								<label>User</label>
+								<select type="form-control" v-model="currentGun.user_id">
+									<option value=""></option>
+									@foreach($auth->group->users()->with('roles')->whereHas("roles", function($q){ $q->where("name", "gun-user"); })->get() as $user)
+										<option value="{{ $user->id }}">{{ $user->fullname }}</option>
+									@endforeach
+								</select>
+							</div>
+
+							<div class="form-group col-xs-6">
+								<label>Latitude</label>
+								<input type="form-control" v-model="currentGun.lat"  />
+							</div>
+
+							<div class="form-group col-xs-6">
+								<label>Long</label>
+								<input type="form-control" v-model="currentGun.long"  />
+							</div>
+
+							<div class="form-group col-xs-6">
+								<label>Radius Of Operation</label>
+								<input type="form-control" v-model="currentGun.geo_radius"  />
+							</div>
+
+							<div class="form-group col-xs-6">
+								<label>Number of Emergency</label>
+								<input type="form-control" v-model="currentGun.emergency_allow"  />
+							</div>
+
+							<div class="form-group col-xs-6">
+								<label>Emergency Duration Unit</label>
+								<select type="form-control" v-model="currentGun.emergency_duration_unit">
+									<option value="hour">Hour</option>
+									<option value="day">Day</option>
+									<option value="month">Month</option>
+									<option value="year">Year</option>
+								</select>
+							</div>
+
+							<div class="form-group col-xs-6">
+								<label>Emergency Duration</label>
+								<input type="form-control" v-model="currentGun.emergency_duration"  />
+							</div>
+
+							
+						</form>
+
+
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default pull-left bg-red" v-on:click="deleteGun">Delete Gun</button>
+						<!--button type="button" class="btn btn-default pull-left bg-red" v-on:click="deleteGun">Delete Gun</button-->
 						<button type="button" class="btn btn-primary bg-blue" v-on:click="updateGunParameters">Update Gun</button>
 					</div>
 				</div>
@@ -102,8 +166,10 @@ var vm = new Vue({
 			erorr: null,
 			gunSearch: null,
 			currentGun: null,
+			currentGunRevert: null,
 			groupGuns: JSON.parse('{!! addslashes(json_encode($auth->group->guns->all())) !!}'),
 			showModal: false,
+			currentIndex: null,
 			alert: { success: null, error: null, info: null, warning: null }
 		},
 		watch: {
@@ -113,18 +179,20 @@ var vm = new Vue({
 		},
 		methods: {
 			closeModal: function() {
+				this.groupGuns[this.currentIndex] = this.currentGunRevert;
 				this.showModal = false;
 			},
-			editGun: function (e, gun) {
+			editGun: function (e, gun, index) {
 				e.preventDefault();
 				this.showModal = true;
 				this.currentGun = gun;
+				this.currentIndex = index;
+				this.currentGunRevert = Object.assign({},gun);
 			},
 			updateGunParameters: function (e, gun) {
 				e.preventDefault();
-				alert(JSON.stringify(this.currentGun));
-			/*	axios.post("{{ route('gun.update') }}", {
-					
+				axios.post("{{ route('gun.update') }}", {
+					gun_details: this.currentGun
 				})
 					.then(response => {
 						//receive response and create alert
@@ -141,7 +209,8 @@ var vm = new Vue({
 					})
 					.catch(function (error) {
 						console.log(error);
-					});*/
+					});
+					this.currentGunRevert = Object.assign({},this.currentGun);
 			},
 			searchGuns: _.debounce(function() {
 						//send axios post quesry
