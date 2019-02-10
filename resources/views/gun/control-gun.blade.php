@@ -66,8 +66,8 @@
 		</div>
 
 		<div class="modal show" v-cloak data-backdrop="false" id="modal-default" v-if="showModal">
-			<div class="modal-dialog">
-				<div class="modal-content">
+			<div class="modal-dialog" v-cloak>
+				<div class="modal-content" v-cloak>
 					<div class="modal-header">
 						<button type="button" class="close" v-on:click="closeModal">
 							<span aria-hidden="true">&times;</span></button>
@@ -141,7 +141,7 @@
 
 					</div>
 					<div class="modal-footer">
-						<!--button type="button" class="btn btn-default pull-left bg-red" v-on:click="deleteGun">Delete Gun</button-->
+						<button type="button" class="btn btn-default pull-left bg-red" v-on:click="deleteGun">Delete Gun</button-->
 						<button type="button" class="btn btn-primary bg-blue" v-on:click="updateGunParameters">Update Gun</button>
 					</div>
 				</div>
@@ -222,9 +222,27 @@ var vm = new Vue({
 								console.log(error)
 						});
 			}, 500),
-			deleteGun: function (e, index) {
+			deleteGun: function (e) {
 				e.preventDefault();
+				//send axios post quesry
+				axios.post("{{ route('gun.delete') }}",{
+						gun_id: this.currentGun.id
+				}).then(response => {
+							//receive response and create alert
+							switch (response.data.type) {
+							case 'error':
+								this.alert.error = response.data.message
+								break;
+							case 'success':
+								this.alert.success = response.data.message
+								break;
+						}
+				}).catch(function(error){
+						console.log(error)
+				});
 
+				this.groupGuns.splice(this.currentGunIndex, 1);
+				this.showModal = false;
 			},
 			clearAlert: function (name) {
 				this.alert[name] = null;

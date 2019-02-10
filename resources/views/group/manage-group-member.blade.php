@@ -98,7 +98,7 @@
                     <td>${ member.fullname }</td>
                     <td>${ member.email }</td>
                     <td><span class="label label-primary">${ member.status }</span></td>
-                    <td><button class="btn btn-primary bg-red" v-on:click="deleteMember($event, member.id)">Remove</button></td>
+                    <td><button class="btn btn-primary bg-red" v-on:click="deleteMember($event, member.id, index)">Remove</button></td>
 									</tr>
 							
                 </table>
@@ -161,19 +161,36 @@
 					});
 			},
 			searchMembers: _.debounce(function() {
-						//send axios post quesry
-						axios.post("{{ route('group-member.search') }}",{
-                            search: this.memberSearch
-                        }).then(response => {
-                            this.groupMembers = response.data;
-                        }).catch(function(error){
-                            console.log(error)
-                        });
-							},
+				//send axios post quesry
+				axios.post("{{ route('group-member.search') }}",{
+						search: this.memberSearch
+				}).then(response => {
+						this.groupMembers = response.data;
+				}).catch(function(error){
+						console.log(error)
+				});
+			},
 			 500),
-			deleteMember: function (e, index) {
+			deleteMember: function (e, memberId, index) {
 				e.preventDefault();
+				//send axios post quesry
+				axios.post("{{ route('group-member.delete') }}",{
+						member_id: memberId
+				}).then(response => {
+							//receive response and create alert
+							switch (response.data.type) {
+							case 'error':
+								this.alert.error = response.data.message
+								break;
+							case 'success':
+								this.alert.success = response.data.message
+								break;
+						}
+				}).catch(function(error){
+						console.log(error)
+				});
 
+				this.groupMembers.splice(index, 1);
 			},
 			clearAlert: function (name) {
 				this.alert[name] = null;

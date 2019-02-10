@@ -21,7 +21,7 @@ class GunController extends Controller
             $this->user = Auth::user();
             return $next($request);
         });
-        $this->middleware('role:gun-controller', ['only' => ['showControlGun']]);//except
+        $this->middleware('role:gun-controller', ['only' => ['showControlGun', 'deleteGun']]);//except
         $this->middleware('role:gun-creator', ['only' => ['showCreateGun']]);//except
         $this->middleware('permission:create-gun', ['only' => ['createGun']]);
         $this->middleware('permission:control-gun', ['only' => ['controlGun']]);
@@ -115,9 +115,35 @@ class GunController extends Controller
         return response()->json($members,200);
     }
 
+    public function deleteGun(Request $request)
+    {
+        $gun = Gun::find($request->gun_id);
+        //add audit trail
+        $this->user->auditTrails()->create([
+            "group_id" => $this->user->group_id,
+            "action" => "Deleted",
+            "object" => $gun->id,
+            "object_type" => get_class($gun),
+            "details" => json_encode($gun)
+        ]);
+        $gun->delete();
+
+        return response()->json([
+            'type' => 'success',
+            'message' => 'Gun Deleted!'
+        ],200);
+    }
+    /**
+     * API Route
+     *
+     * @param Request $request
+     * @return void
+     */
     public function getGunParameters(Request $request)
     {
         $gun = Gun::find($request->id);
         return $gun;
     }
+
+    
 }

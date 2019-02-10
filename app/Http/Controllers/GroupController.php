@@ -25,7 +25,7 @@ class GroupController extends Controller
         $this->middleware('role:super-admin', ['only' => ['showManageGroup']]);//except
         $this->middleware('role:group-admin', ['only' => ['showManageGroupMember']]);
         $this->middleware('permission:create-group', ['only' => ['createGroup']]);
-        $this->middleware('permission:manage-group-members', ['only' => ['createGroupMember']]);
+        $this->middleware('permission:manage-group-members', ['only' => ['createGroupMember', 'deleteGroupMember']]);
     }
 
     public function showManageGroup() 
@@ -154,5 +154,23 @@ class GroupController extends Controller
         }
         $members = $this->user->group->users()->where('fullname', 'like', '%' . $request->search . '%')->orWhere('email', 'like', '%' . $request->search . '%')->get();
         return response()->json($members,200);
+    }
+
+    public function deleteGroupMember(Request $request)
+    {
+        $member = User::find($request->member_id);
+        //add audit trail
+        $this->user->auditTrails()->create([
+            "group_id" => $this->user->group_id,
+            "action" => "Deleted",
+            "object" => $member->id,
+            "object_type" => get_class($member),
+            "details" => json_encode($member)
+        ]);
+        $member->delete();
+        return response()->json([
+            'type' => 'success',
+            'message' => 'Member Deleted!'
+        ],200);
     }
 }

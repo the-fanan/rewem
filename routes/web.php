@@ -43,6 +43,7 @@ Route::group(['prefix' => 'group'], function(){
     Route::get('manage-group-member', 'GroupController@showManageGroupMember')->name('group-member.manage.show');
     Route::post('create-group-member', 'GroupController@createGroupMember')->name('group-member.create');
     Route::post('search-group-member', 'GroupController@searchGroupMember')->name('group-member.search');
+    Route::post('delete-group-member', 'GroupController@deleteGroupMember')->name('group-member.delete');
     //create gun routes
     Route::get('create-gun', 'GunController@showCreateGun')->name('gun.create.show');
     Route::post('create-gun', 'GunController@createGun')->name('gun.create');
@@ -50,4 +51,5 @@ Route::group(['prefix' => 'group'], function(){
     Route::get('control-gun', 'GunController@showControlGun')->name('gun.control.show');
     Route::post('search-gun', 'GunController@searchGuns')->name('gun.search');
     Route::post('update-gun', 'GunController@updateGun')->name('gun.update');
+    Route::post('delete-gun', 'GunController@deleteGun')->name('gun.delete');
 });
