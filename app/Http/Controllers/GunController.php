@@ -16,7 +16,7 @@ class GunController extends Controller
     private $user;
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('getGunParameters');
         $this->middleware(function($request, $next){
             $this->user = Auth::user();
             return $next($request);
