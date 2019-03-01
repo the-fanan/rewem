@@ -141,8 +141,8 @@ class GunController extends Controller
      */
     public function getGunParameters(Request $request)
     {
-        $gun = Gun::find($request->id);
-        return $gun;
+        $gun = Gun::find($request->id,["lat","long","geo_radius","emergency_allow","emergency_duration","emergency_duration_unit","rfid"]);
+        return ["lt"=>$gun->lat,"lg"=>$gun->long,"gr"=>$gun->geo_radius,"ea"=>$gun->emergency_allow,"ed"=>$gun->emergency_duration,"edu"=>$gun->emergency_duration_unit,"r"=>$gun->rfid];
     }
 
     
