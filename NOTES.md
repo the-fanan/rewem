@@ -18,3 +18,7 @@ if (distance(user.lat, user.lon, post.lat, post.lon) <= desiredRadiusInKm){
 } else {
   // return false;
 }<br>
+
+
+- iwlist wlo1 freq
+- sudo iwconfig wlo1 freq 2.412G
